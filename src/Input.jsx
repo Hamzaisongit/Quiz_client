@@ -12,9 +12,27 @@ useEffect(()=>{
     })
 },[])
 
-const [input, setInput] = useState("")
+const [input, setInput] = useState({
+    name : "",
+    answer : ""
+})
 
 const handleChange = (e)=>{
+    if(e.target.name==="name"){
+      setInput((p)=>{
+        return {
+            ...p,
+            name : e.target.value
+        }
+      })
+    }else{
+        setInput((p)=>{
+            return {
+                ...p,
+                answer : e.target.value
+            }
+          })
+    }
     setInput(e.target.value)
 }
 
@@ -26,7 +44,10 @@ const handleClick = ()=>{
 
     return(
         <>
-<input type="text" onChange={handleChange} value={input}></input>
+<input placeholder="Your name" type="text" onChange={handleChange} value={input.name} name="name"></input>
+<br></br>
+<input placeholder="answer" type="text" onChange={handleChange} value={input.answer} name="answer"></input>
+<br></br>
 <button onClick={handleClick}>click</button>
         </>
     )
