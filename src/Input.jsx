@@ -22,22 +22,22 @@ const handleChange = (e)=>{
       setInput((p)=>{
         return {
             ...p,
-            name : e.target.value
+            [e.target.name] : e.target.value
         }
       })
     }else{
         setInput((p)=>{
             return {
                 ...p,
-                answer : e.target.value
+                [e.target.name] : e.target.value
             }
           })
     }
-    setInput(e.target.value)
 }
 
 const handleClick = ()=>{
     console.log("hi")
+    console.log(input.answer + " " + input.name)
     socket.emit("message",input)
     console.log("hellow")
   }
