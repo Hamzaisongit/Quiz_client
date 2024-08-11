@@ -4,10 +4,10 @@ import Input from "./Input";
 
 const App = ()=>{
 const socket = io("https://quiz-server-4k2w.onrender.com");
+// const socket = io("http://localhost:3000");
 
   return(
     <>
-<h1>Hamza</h1>
 <Input socket={socket}></Input>
 
     </>
