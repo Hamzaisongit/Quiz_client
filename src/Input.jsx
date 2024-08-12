@@ -1,20 +1,95 @@
 import React, { useEffect, useState } from "react";
+import './Input.css'; // Import the CSS file
 
-const ans = ["hamza", "isa", "good", "great"];
+const ans = [
+  "scissors", "cutter",
+  "syringe", "needle",
+  "ring", "jewelry",
+  "turtle", "tortoise",
+  "rainbow", "colors",
+  "moon", "crescent",
+  "cat", "kitten",
+  "burger", "sandwich",
+  "monitor", "screen",
+  "cupcake", "muffin",
+  "cheese", "dairy",
+  "christmas-tree", "christmas",
+  "hot-air-balloon", "balloon", "airship",
+  "sunglasses", "shades",
+  "bicycle", "bike",
+  "dress", "clothes",
+  "traffic-light", "signal", "lights",
+  "laptop", "computer",
+  "hat", "cap",
+  "dog", "puppy",
+  "star", "shape",
+  "screwdriver", "tool",
+  "camera", "photograph",
+  "washing-machine", "machine", "washer",
+  "headphones", "earphones",
+  "truck", "lorry",
+  "cola", "soda",
+  "cake", "dessert",
+  "snake", "serpent",
+  "cow", "animal",
+  "lipstick", "makeup",
+  "necklace", "jewelry",
+  "flower", "blossom",
+  "lollipop", "candy",
+  "lightbulb", "lamp",
+  "milk", "drink",
+  "mountain", "peak",
+  "ant", "insect",
+  "fish", "seafood",
+  "balloons", "party",
+  "books", "reading",
+  "glass-of-water", "water", "drink",
+  "leaf", "plant",
+  "watch", "time",
+  "shoes", "heels",
+  "cookie", "biscuit",
+  "pen", "write",
+  "sun", "sunshine",
+  "tomato", "vegetable",
+  "shirt", "clothes",
+  "coffee", "drink",
+  "ice-cube", "ice", "cube",
+  "chili-pepper", "chili", "pepper",
+  "pizza", "food",
+  "ice-cream-cone", "ice-cream", "dessert",
+  "airplane", "flight",
+  "candle", "light",
+  "watermelon", "fruit",
+  "rose", "flower",
+  "trees", "nature",
+  "butterfly", "insect"
+];
+
 const ansSet = new Set(ans);
 
 const ph2Ans = {
-    place1: 1,
-    place2: 2,
-    place3: 3,
-    place4: 4,
-    place5: 5,
-    place6: 6,
-    place7: 7,
-    place8: 8,
-    place9: 9,
-    place10: 10,
-  };
+  place1: 8,
+  place2: 11,
+  place3: 1,
+  place4: 3,
+  place5: 6,
+  place6: 2,
+  place7: 9,
+  place8: 5,
+  place9: 7,
+  place10: 4
+};
+
+const ph3Ans = {
+  q1: 'b',
+  q2: 'a',
+  q3: 'b',
+  q4: 'a',
+  q5: 'g',
+  q6: 'd',
+  q7: 'c',
+  q8: 'k'
+};
 
 let scr = 0;
 
@@ -26,6 +101,10 @@ const Input = ({ socket }) => {
       setFlag("connected");
     });
 
+    socket.on("recieved",(data)=>{
+      window.alert(data)
+    })
+
     socket.on("welcome", (data) => {
       console.log(data);
     });
@@ -34,7 +113,6 @@ const Input = ({ socket }) => {
   // HOOKS...
   const [input, setInput] = useState({
     name: "",
-    answer1: "",
     answer2: "",
     place1: "",
     place2: "",
@@ -46,6 +124,14 @@ const Input = ({ socket }) => {
     place8: "",
     place9: "",
     place10: "",
+    q1: "",
+    q2: "",
+    q3: "",
+    q4: "",
+    q5: "",
+    q6: "",
+    q7: "",
+    q8: ""
   });
 
   const [flag, setFlag] = useState("wait we're connecting...");
@@ -59,28 +145,38 @@ const Input = ({ socket }) => {
     });
   };
 
-  const scoreCalc = (str,ph2) => {
+  const scoreCalc = (str, ph2, ph3) => {
     const inputSet = new Set(str.split(","));
     
-    //phase1 calculation
+    // Phase 1 calculation
+    if(Number(str)!=0){
     inputSet.forEach((e) => {
       console.log(ansSet.has(e));
       ansSet.has(e) ? scr++ : (scr = scr - 0.5);
-    });
+    });}
+
     console.log(scr);
-    //phase2 calculation
-    for(let i in ph2){
-        if(input[i]!=""){
-            // console.log(ph2[i],ph2[i] == input[i])
-            Number(ph2[i]) == Number(input[i]) ? scr++ : (scr = scr - 0.5);
-        }
+
+    // Phase 2 calculation
+    for (let i in ph2) {
+      if (input[i] !== "") {
+        // Convert to numbers for comparison
+        Number(ph2[i]) === Number(input[i]) ? scr++ : (scr = scr - 0.5);
+      }
+    }
+
+    for (let i in ph3) {
+      if (input[i] !== "") {
+        
+        ph3[i] === input[i] ? scr++ : (scr = scr - 0.5);
+      }
     }
     
     console.log(scr);
   };
 
   const handleClick = () => {
-    scoreCalc(input.answer2,ph2Ans);
+    scoreCalc(input.answer2, ph2Ans, ph3Ans);
     console.log("hi");
     console.log({
       ...input,
@@ -95,7 +191,7 @@ const Input = ({ socket }) => {
   };
 
   return (
-    <>
+    <div className="container">
       <h1>Hamza {flag}</h1>
       <input
         placeholder="Your name"
@@ -103,140 +199,214 @@ const Input = ({ socket }) => {
         onChange={handleChange}
         value={input.name}
         name="name"
-      ></input>
-      <br></br>
-      <input
-        placeholder="answer"
-        type="text"
-        onChange={handleChange}
-        value={input.answer1}
-        name="answer1"
-      ></input>
-      <br></br>
+      />
+
+     <h3>Phase 1</h3>
+     
       <textarea
         placeholder="answer"
-        type="text"
         onChange={handleChange}
         value={input.answer2}
         name="answer2"
         cols={20}
-        style={{ resize: "none" }}
-      ></textarea>
-      <br></br>
+      />
       <h3>Phase 2</h3>
-      <br></br>
+  
       <div>
-        <label>Place 1: </label>
+        <label>E.C., Env., Rubber, Plastic : </label>
         <input
           placeholder="Place 1"
           type="number"
           onChange={handleChange}
           value={input.place1}
           name="place1"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 2: </label>
+        <label>Mech. Drawing Hall: </label>
         <input
           placeholder="Place 2"
           type="number"
           onChange={handleChange}
           value={input.place2}
           name="place2"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 3: </label>
+        <label>TextileTechnology  : </label>
         <input
           placeholder="Place 3"
           type="number"
           onChange={handleChange}
           value={input.place3}
           name="place3"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 4: </label>
+        <label>Chemical Engg. : </label>
         <input
           placeholder="Place 4"
           type="number"
           onChange={handleChange}
           value={input.place4}
           name="place4"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 5: </label>
+        <label>Admission Cell  : </label>
         <input
           placeholder="Place 5"
           type="number"
           onChange={handleChange}
           value={input.place5}
           name="place5"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 6: </label>
+        <label>LRC Block, Library : </label>
         <input
           placeholder="Place 6"
           type="number"
           onChange={handleChange}
           value={input.place6}
           name="place6"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 7: </label>
+        <label>Civil Drawing Hall: </label>
         <input
           placeholder="Place 7"
           type="number"
           onChange={handleChange}
           value={input.place7}
           name="place7"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 8: </label>
+        <label>Main Block, Principal Office, Civil Conference Room, Maths : </label>
         <input
           placeholder="Place 8"
           type="number"
           onChange={handleChange}
           value={input.place8}
           name="place8"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 9: </label>
+        <label>Annexe Building Classroom & Lab., BM : </label>
         <input
           placeholder="Place 9"
           type="number"
           onChange={handleChange}
           value={input.place9}
           name="place9"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
       <div>
-        <label>Place 10: </label>
+        <label>Engg., App. Mech., LAA Office : </label>
         <input
           placeholder="Place 10"
           type="number"
           onChange={handleChange}
           value={input.place10}
           name="place10"
-        ></input>
-        <br></br>
+          style={{ WebkitAppearance: 'none', MozAppearance: 'textfield' }}
+        />
       </div>
+      
+      <h3>Phase 3</h3>
+      <div>
+        <label>Q1: </label>
+        <input
+          placeholder="Q1"
+          type="text"
+          onChange={handleChange}
+          value={input.q1}
+          name="q1"
+        />
+      </div>
+      <div>
+        <label>Q2: </label>
+        <input
+          placeholder="Q2"
+          type="text"
+          onChange={handleChange}
+          value={input.q2}
+          name="q2"
+        />
+      </div>
+      <div>
+        <label>Q3: </label>
+        <input
+          placeholder="Q3"
+          type="text"
+          onChange={handleChange}
+          value={input.q3}
+          name="q3"
+        />
+      </div>
+      <div>
+        <label>Q4: </label>
+        <input
+          placeholder="Q4"
+          type="text"
+          onChange={handleChange}
+          value={input.q4}
+          name="q4"
+        />
+      </div>
+      <div>
+        <label>Q5: </label>
+        <input
+          placeholder="Q5"
+          type="text"
+          onChange={handleChange}
+          value={input.q5}
+          name="q5"
+        />
+      </div>
+      <div>
+        <label>Q6: </label>
+        <input
+          placeholder="Q6"
+          type="text"
+          onChange={handleChange}
+          value={input.q6}
+          name="q6"
+        />
+      </div>
+      <div>
+        <label>Q7: </label>
+        <input
+          placeholder="Q7"
+          type="text"
+          onChange={handleChange}
+          value={input.q7}
+          name="q7"
+        />
+      </div>
+      <div>
+        <label>Q8: </label>
+        <input
+          placeholder="Q8"
+          type="text"
+          onChange={handleChange}
+          value={input.q8}
+          name="q8"
+        />
+      </div>
+
       <button onClick={handleClick}>Click</button>
-    </>
+    </div>
   );
 };
 
