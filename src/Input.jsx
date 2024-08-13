@@ -98,7 +98,7 @@ const Input = ({ socket }) => {
   useEffect(() => {
     socket.on("connect", () => {
       console.log("works here too");
-      setFlag("connected");
+      setFlag("connected, we're good to GO!!");
     });
 
     socket.on("recieved",(data)=>{
@@ -134,7 +134,7 @@ const Input = ({ socket }) => {
     q8: ""
   });
 
-  const [flag, setFlag] = useState("wait we're connecting...");
+  const [flag, setFlag] = useState("Please wait, we're connecting...");
 
   const handleChange = (e) => {
     setInput((p) => {
@@ -176,6 +176,10 @@ const Input = ({ socket }) => {
   };
 
   const handleClick = () => {
+    if(Number(input.name) == 0){
+      window.alert("please enter a valid name!")
+      return
+    }
     scoreCalc(input.answer2, ph2Ans, ph3Ans);
     console.log("hi");
     console.log({
@@ -192,7 +196,7 @@ const Input = ({ socket }) => {
 
   return (
     <div className="container">
-      <h1>Hamza {flag}</h1>
+      <h1>{flag}</h1>
       <input
         placeholder="Your name"
         type="text"
@@ -201,17 +205,18 @@ const Input = ({ socket }) => {
         name="name"
       />
 
-     <h3>Phase 1</h3>
+     <h3>Phase 1 :</h3>
+     <p>eneter spellings of objects displayed..</p>
      
       <textarea
-        placeholder="answer"
+        placeholder={`all the spellings should be in lower-case, seperated by a comma & without any spaces inbetween..\nexample: cat,moon,merry-go-round`}
         onChange={handleChange}
         value={input.answer2}
         name="answer2"
         cols={20}
       />
       <h3>Phase 2</h3>
-  
+      <p>eneter numbers associated with corresponding building-blocks</p>
       <div>
         <label>E.C., Env., Rubber, Plastic : </label>
         <input
@@ -324,6 +329,7 @@ const Input = ({ socket }) => {
       </div>
       
       <h3>Phase 3</h3>
+      <p>eneter correct option for the Question in <em>lower-case</em></p>
       <div>
         <label>Q1: </label>
         <input

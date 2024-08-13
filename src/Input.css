@@ -12,6 +12,11 @@
   h1 {
     color: #333;
   }
+
+  p {
+    color: grey;
+    font-style:italic;
+  }
   
   /* Input Styles */
   input[type="text"],
