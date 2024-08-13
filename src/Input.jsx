@@ -206,10 +206,10 @@ const Input = ({ socket }) => {
       />
 
      <h3>Phase 1 :</h3>
-     <p>eneter spellings of objects displayed..</p>
+     <p>enter spellings of objects displayed..<br></br>all the spellings should be in lower-case, seperated by a comma & without any spaces inbetween..</p>
      
       <textarea
-        placeholder={`all the spellings should be in lower-case, seperated by a comma & without any spaces inbetween..\nexample: cat,moon,merry-go-round`}
+        placeholder={"example: cat,moon,merry-go-round"}
         onChange={handleChange}
         value={input.answer2}
         name="answer2"
